@@ -79,7 +79,11 @@ func (c *client) List() (map[string]*url.URL, error) {
 			continue
 		}
 		wg.Run(func(p ...interface{}) {
-			line := p[0].(string)
+			line, ok := p[0].(string)
+			if !ok {
+				fmt.Fprintf(os.Stderr, "failed to assert type \n")
+				return
+			}
 			ip, u, err := parseProxyLine(line)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, err.Error()+"\n")
